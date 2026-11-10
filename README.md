@@ -21,6 +21,7 @@ Plain static site: no build step, no framework, no cookies and no analytics. The
     ├── js/app.js         Renders data.js into the page, tabs, theme, CV export
     ├── js/banner.js      Animated "governed data flow" banner behind the hero
     ├── js/counter.js     "CV downloads" counter under the hero buttons
+    ├── cv/               Stanislav_Ferenc_CV.pdf – the file behind "Download CV (PDF)"
     └── img/              Icons and the social preview image (og-image.png)
 ```
 
@@ -61,8 +62,11 @@ git push
 
 ## Notes
 
-- The "Download CV (PDF)" button opens the browser's print dialog with a dedicated A4 CV layout – choose "Save as PDF".
+- "Download CV (PDF)" downloads the ready-made file `assets/cv/Stanislav_Ferenc_CV.pdf`, so every visitor gets the identical
+  4-page A4 CV on any device. **When the content in data.js changes, regenerate this PDF** (ask Claude, or: open index.html in
+  Chrome → Ctrl+P → Destination "Save as PDF", Paper A4, Margins "None", tick "Background graphics" → save over the file),
+  then raise the `?v=` tag on the button link in index.html.
 - The banner animation pauses when off-screen and is replaced by a still frame for visitors who prefer reduced motion.
 - The headline (`person.headline` in data.js, parts separated by " · ") is revealed part by part, each part spinning once, on every page load; with reduced motion it is shown immediately.
 - The e-mail address is assembled at runtime to keep it out of simple plain-text scrapers.
-- CV download counter: uses the free public counter service abacus.jasoncameron.dev (settings `cvCounter` in data.js). The number is read on each page load and increased when the CV is exported (button or Ctrl+P), at most once per browser session. Open `https://stafero.github.io/?nocount` once in your own browsers so your own tests are not counted (`?count` undoes it). When opened from disk the counter shows a preview and never contacts the service.
+- CV download counter: uses the free public counter service abacus.jasoncameron.dev (settings `cvCounter` in data.js). The number is read on each page load and increased when "Download CV (PDF)" is clicked, at most once per browser session. Open `https://stafero.github.io/?nocount` once in your own browsers so your own tests are not counted (`?count` undoes it). When opened from disk the counter shows a preview and never contacts the service.

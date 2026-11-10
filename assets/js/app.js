@@ -192,14 +192,15 @@
     try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
   });
 
-  /* "Download CV (PDF)": count first (counter.js), then open the print dialog */
+  /* "Download CV (PDF)" downloads the ready-made file assets/cv/Stanislav_Ferenc_CV.pdf
+     (identical on every device); the click is counted by counter.js */
   $("cvBtn").addEventListener("click", () => {
     if (typeof window.cvCounterHit === "function") window.cvCounterHit();
-    window.print();
   });
 
-  /* ---------- CV-style print / PDF export ----------
-     Printing (button or Ctrl+P) always uses this dedicated A4 layout:
+  /* ---------- CV layout (A4) ----------
+     Source of the downloadable PDF (assets/cv/Stanislav_Ferenc_CV.pdf) and used when
+     someone prints the page with Ctrl+P:
      header card with QR, key results, profile + skills sidebar, experience
      timeline, project cards (never split across pages), credentials, learning. */
   (function buildCV() {
