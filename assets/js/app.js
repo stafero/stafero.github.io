@@ -199,6 +199,8 @@
     const sec = (title, html) => `<section class="cv-sec"><h2>${title}</h2>${html}</section>`;
     const strip = (s) => s.replace(/<[^>]+>/g, "");
     const liHost = p.linkedin.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+    const qrEl = document.querySelector("#liQr svg");
+    const qrSvg = qrEl ? qrEl.outerHTML : "";
     const exp = P.experience.map((e) => `<div class="cv-job">
         <div class="cv-job__head"><span><b>${esc(e.role)}</b> | ${esc(e.company)}</span><span class="cv-date">${esc(e.period)}</span></div>
         ${li(e.bullets.map(strip).map(esc))}</div>`).join("");
@@ -211,9 +213,12 @@
     const html = `<table class="cv-page"><thead><tr><td><div class="cv-pad"></div></td></tr></thead>
       <tfoot><tr><td><div class="cv-pad"></div></td></tr></tfoot><tbody><tr><td>
       <header class="cv-head">
-        <h1>${esc(p.name)}</h1>
-        <p class="cv-title">${esc(p.headline)}</p>
-        <p class="cv-contact">${esc(p.location)} | <a href="mailto:${esc(email)}">${esc(email)}</a> | <a href="${esc(p.linkedin)}">${esc(liHost)}</a></p>
+        <div>
+          <h1>${esc(p.name)}</h1>
+          <p class="cv-title">${esc(p.headline)}</p>
+          <p class="cv-contact">${esc(p.location)} | <a href="mailto:${esc(email)}">${esc(email)}</a> | <a href="${esc(p.linkedin)}">${esc(liHost)}</a></p>
+        </div>
+        ${qrSvg ? `<div class="cv-qr">${qrSvg}<small>LinkedIn</small></div>` : ""}
       </header>
       ${sec("Professional Profile", p.summary.map((s) => `<p>${esc(s)}</p>`).join(""))}
       ${sec("Work Experience", exp)}
