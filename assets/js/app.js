@@ -193,45 +193,105 @@
   });
 
   /* ---------- CV-style print / PDF export ----------
-     Printing (button or Ctrl+P) always uses this dedicated A4 layout. */
+     Printing (button or Ctrl+P) always uses this dedicated A4 layout:
+     header card with QR, key results, profile + skills sidebar, experience
+     timeline, project cards (never split across pages), credentials, learning. */
   (function buildCV() {
-    const li = (arr) => "<ul>" + arr.map((x) => "<li>" + x + "</li>").join("") + "</ul>";
-    const sec = (title, html) => `<section class="cv-sec"><h2>${title}</h2>${html}</section>`;
-    const strip = (s) => s.replace(/<[^>]+>/g, "");
+    const strip = (s) => s.replace(/<(?!\/?b>)[^>]+>/g, "");          // keep <b> highlights only
+    const pills = (arr, cls = "") => `<ul class="cv-pills ${cls}">${arr.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>`;
+    const sec = (title, html, cls = "") => `<section class="cv-sec ${cls}"><h2><span>${title}</span></h2>${html}</section>`;
     const liHost = p.linkedin.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+    const site = "stafero.github.io";
     const qrEl = document.querySelector("#liQr svg");
     const qrSvg = qrEl ? qrEl.outerHTML : "";
-    const exp = P.experience.map((e) => `<div class="cv-job">
-        <div class="cv-job__head"><span><b>${esc(e.role)}</b> | ${esc(e.company)}</span><span class="cv-date">${esc(e.period)}</span></div>
-        ${li(e.bullets.map(strip).map(esc))}</div>`).join("");
-    const proj = P.projects.map((x) => `<div class="cv-proj"><div class="cv-job__head"><span><b>${esc(x.name)}</b></span><span class="cv-date">${esc(x.period)}</span></div>
-        <p>${esc(x.pitch || x.summary)}</p><p class="cv-tech"><b>Technology:</b> ${x.stack.map(esc).join(", ")}</p></div>`).join("") +
-      `<p class="cv-note">Self-hosted, running locally – live demo available on request.</p>`;
-    const cred = (c) => `<b>${esc(c.name)}</b> – ${esc(c.issuer)}, ${esc(c.year)}`;
-    const msTopics = Object.keys(P.msLearn.modules);
-    const udemyDone = P.udemy.filter((c) => c.status === "done").map((c) => esc(c.title));
-    const html = `<table class="cv-page"><thead><tr><td><div class="cv-pad"></div></td></tr></thead>
-      <tfoot><tr><td><div class="cv-pad"></div></td></tr></tfoot><tbody><tr><td>
-      <header class="cv-head">
-        <div>
+
+    const head = `<header class="cv-head">
+        <div class="cv-head__main">
           <h1>${esc(p.name)}</h1>
-          <p class="cv-title">${esc(p.headline)}</p>
-          <p class="cv-contact">${esc(p.location)} | <a href="mailto:${esc(email)}">${esc(email)}</a> | <a href="${esc(p.linkedin)}">${esc(liHost)}</a></p>
+          <p class="cv-title">${p.headline.split(" · ").map((t) => `<span>${esc(t)}</span>`).join("")}</p>
+          <p class="cv-contact">
+            <span>${esc(p.location)}</span>
+            <span><a href="mailto:${esc(email)}">${esc(email)}</a></span>
+            <span><a href="${esc(p.linkedin)}">${esc(liHost)}</a></span>
+            <span><a href="https://${site}/">${site}</a></span>
+          </p>
         </div>
-        ${qrSvg ? `<div class="cv-qr">${qrSvg}<small>LinkedIn</small></div>` : ""}
-      </header>
-      ${sec("Professional Profile", p.summary.map((s) => `<p>${esc(s)}</p>`).join(""))}
-      ${sec("Work Experience", exp)}
-      ${sec("Self-Hosted Projects", proj)}
-      <div class="cv-cols">
-        ${sec("Languages", li(p.languages.map(([l, v]) => `<b>${esc(l)}</b> – ${esc(v)}`)))}
-        ${sec("Education", li(P.education.map((e) => `<b>${esc(e.degree)}</b>, ${esc(e.year)} – ${esc(e.school)}`)))}
+        ${qrSvg ? `<div class="cv-qr">${qrSvg}<small>Scan · LinkedIn</small></div>` : ""}
+      </header>`;
+
+    const stats = `<div class="cv-stats">${P.stats.map((s) =>
+      `<div class="cv-stat"><b>${esc(s.value)}<small>${esc(s.unit)}</small></b><span>${esc(s.label)}</span></div>`).join("")}</div>`;
+
+    // skills sidebar: the four most relevant groups, four items each (full list stays on the web page)
+    const skillGroups = P.skills.filter((g) => !/telecom|tools/i.test(g.group)).slice(0, 4);
+    const intro = `<div class="cv-intro">
+        <div class="cv-intro__main">
+          ${sec("Professional Profile", p.summary.map((s) => `<p>${esc(s)}</p>`).join(""))}
+          ${sec("Languages", `<ul class="cv-langs">${p.languages.map(([l, v]) => `<li><b>${esc(l)}</b><span>${esc(v)}</span></li>`).join("")}</ul>`)}
+        </div>
+        <aside class="cv-side">
+          ${sec("Core Skills", skillGroups.map((g) => `<div class="cv-skill"><h3>${esc(g.group)}</h3>${pills(g.items.slice(0, 4), "cv-pills--sm")}</div>`).join(""))}
+        </aside>
+      </div>`;
+
+    // CV only: older roles are shortened (newest role keeps everything; the web page always shows all bullets)
+    const CV_BULLETS = [99, 6, 4, 3, 2];
+    const exp = `<ol class="cv-timeline">${P.experience.map((e, i) => `<li class="cv-job">
+        <div class="cv-job__head">
+          <div><h3>${esc(e.role)}</h3><p class="cv-job__co">${esc(e.company)}<span> · ${esc(e.meta)}</span></p></div>
+          <span class="cv-date">${esc(e.period)}</span>
+        </div>
+        <ul class="cv-bullets">${e.bullets.slice(0, CV_BULLETS[i] ?? 2).map((b) => `<li>${strip(b)}</li>`).join("")}</ul>
+      </li>`).join("")}</ol>`;
+
+    const proj = `<div class="cv-projects">${P.projects.map((x) => `<article class="cv-proj">
+        <div class="cv-proj__head">
+          <div><h3>${esc(x.name)}</h3><p class="cv-proj__meta">${esc(x.kind)} · ${esc(x.period)}</p></div>
+          <span class="cv-badge">${esc(x.status)}</span>
+        </div>
+        <p>${esc(x.pitch || x.summary)}</p>
+        ${pills(x.stack, "cv-pills--tags")}
+      </article>`).join("")}
+      <p class="cv-note">Self-hosted and running locally – a live walkthrough is available on request.</p></div>`;
+
+    const cred = (c) => `<li><span class="cv-yr">${esc(c.year)}</span><span><b>${esc(c.name)}</b><small>${esc(c.issuer)}${c.note ? " · " + esc(c.note) : ""}</small></span></li>`;
+    // CV only: the six SQS PractiQ® Advanced Level modules are merged into one line (the web page lists them separately)
+    const sqsAdv = P.courses.filter((c) => /PractiQ.*Advanced Level/.test(c.name));
+    const courses = P.courses.filter((c) => !sqsAdv.includes(c));
+    if (sqsAdv.length) {
+      const ys = sqsAdv.map((c) => +c.year).sort();
+      courses.splice(courses.findIndex((c) => /PractiQ/.test(c.name)) >>> 0, 0, {
+        year: ys[0] === ys[ys.length - 1] ? String(ys[0]) : `${ys[0]}–${String(ys[ys.length - 1]).slice(2)}`,
+        name: "SQS PractiQ® Advanced Level – " + sqsAdv.map((c) => c.name.split(/ – /).pop()).join(", "),
+        issuer: sqsAdv[0].issuer
+      });
+    }
+    const creds = `<div class="cv-grid2">
+        ${sec("Certifications", `<ul class="cv-creds">${P.certifications.map(cred).join("")}</ul>`)}
+        ${sec("Education", `<ul class="cv-creds">${P.education.map((e) => cred({ year: e.year, name: e.degree, issuer: e.school })).join("")}</ul>`)}
       </div>
-      ${sec("Certifications", li(P.certifications.map(cred)))}
-      ${sec("Professional Courses", li(P.courses.map(cred)))}
-      ${sec("Continuous Learning",
-        `<p><b>Microsoft Learn</b> (${P.msLearn.totals.paths} learning paths, ${P.msLearn.totals.modules} modules): ${msTopics.map(esc).join(" · ")}</p>
-         <p><b>Udemy</b></p><div class="cv-2col">${li(udemyDone)}</div>`)}
+      ${sec("Professional Courses", `<ul class="cv-creds cv-creds--tight cv-creds--cols">${courses.map(cred).join("")}</ul>`)}`;
+
+    const udemyDone = P.udemy.filter((c) => c.status === "done");
+    const learning = sec("Continuous Learning", `<div class="cv-learn">
+        <div class="cv-learn__box"><h3>Microsoft Learn <small>${P.msLearn.totals.paths} learning paths · ${P.msLearn.totals.modules} modules</small></h3>
+          ${pills(Object.keys(P.msLearn.modules), "cv-pills--sm")}</div>
+        <div class="cv-learn__box"><h3>Udemy <small>${udemyDone.length} courses completed</small></h3>
+          <ul class="cv-learn__list">${udemyDone.map((c) => `<li>${esc(c.title)}</li>`).join("")}</ul></div>
+      </div>`, "cv-keep");
+
+    const html = `
+      <div class="cv-bar" aria-hidden="true"></div>
+      <div class="cv-foot" aria-hidden="true"><span>${esc(p.name)} · Curriculum Vitae</span><span>${site}</span></div>
+      <table class="cv-page"><thead><tr><td><div class="cv-pad cv-pad--top"></div></td></tr></thead>
+      <tfoot><tr><td><div class="cv-pad"></div></td></tr></tfoot><tbody><tr><td>
+        ${head}
+        ${stats}
+        ${intro}
+        ${sec("Work Experience", exp)}
+        ${sec("Self-Hosted Projects", proj, "cv-sec--projects")}
+        ${creds}
+        ${learning}
       </td></tr></tbody></table>`;
     const el = document.createElement("div");
     el.id = "cv"; el.className = "cv"; el.innerHTML = html;
