@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found – Stanislav Ferenc</title>
+  <meta name="robots" content="noindex">
+  <!-- GitHub Pages serves this page for ANY unknown URL, at any depth, so all
+       paths start from the site root ("/..."). When the file is opened from disk
+       for testing, the small scripts below switch to folder-relative paths. -->
+  <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#1f4f99">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <script>if (location.protocol === "file:") document.write('<link rel="stylesheet" href="assets/css/styles.css">');</script>
+  <script>try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+  <style>
+    :root { --bad: #c2410c; }
+    :root[data-theme="dark"] { --bad: #fb7a4a; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bad: #fb7a4a; } }
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+    .nf-band { flex: 1; display: grid; place-items: center; border-bottom: 0; min-height: calc(100vh - 57px - 70px); }
+    .nf-band .hero__bg { -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,.35) 0%, rgba(0,0,0,.6) 40%, #000 80%);
+                                 mask-image: radial-gradient(ellipse at center, rgba(0,0,0,.35) 0%, rgba(0,0,0,.6) 40%, #000 80%); }
+    .nf { position: relative; z-index: 1; text-align: center; padding: 48px 16px; max-width: 640px; }
+    .nf__code { font-size: clamp(5rem, 22vw, 10rem); font-weight: 800; letter-spacing: -.04em; line-height: 1; margin: .1em 0 .15em;
+      perspective: 800px; color: var(--text); }
+    .nf__code span { display: inline-block; }
+    .nf__code .mid { color: var(--accent); }
+    .nf__status { display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 10px; border: 1px solid var(--line);
+      border-radius: 999px; background: var(--surface); font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .nf__status i { width: 7px; height: 7px; border-radius: 50%; background: var(--bad); box-shadow: 0 0 0 3px color-mix(in srgb, var(--bad) 20%, transparent); }
+    .nf h1 { font-size: 1.5rem; margin: .2em 0 .4em; }
+    .nf p { color: var(--muted); margin: 0 auto .6em; max-width: 520px; }
+    .nf__path { display: inline-block; font: .85rem/1.4 ui-monospace, SFMono-Regular, Consolas, monospace; color: var(--text);
+      background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; word-break: break-all; }
+    .nf .hero__actions { justify-content: center; margin-top: 1.6em; }
+    .nf__fade { opacity: 0; transform: translateY(6px); animation: nf-in .7s ease forwards; }
+    .d1 { animation-delay: 2.1s; } .d2 { animation-delay: 2.35s; } .d3 { animation-delay: 2.6s; }
+    @keyframes nf-in { to { opacity: 1; transform: none; } }
+    .nf__code .hl-wait { opacity: 0; }
+    @media (prefers-reduced-motion: reduce) { .nf__fade { animation: none; opacity: 1; transform: none; } .nf__code .hl-wait { opacity: 1; } }
+    .topbar .nav a { cursor: pointer; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <a class="brand" href="/">Stanislav <span>Ferenc</span></a>
+      <nav class="nav" aria-label="Profile sections">
+        <a href="/#experience">Experience</a>
+        <a href="/#projects">Projects</a>
+        <a href="/#skills">Skills &amp; Credentials</a>
+        <a href="/#workshops">Workshops</a>
+      </nav>
+      <a class="btn btn--primary btn--sm" href="/#contact">Contact</a>
+      <button class="theme" id="themeBtn" type="button" aria-label="Toggle dark mode">◐</button>
+    </div>
+  </header>
+
+  <main class="hero-band nf-band" id="main">
+    <canvas class="hero__bg" id="heroCanvas" data-mode="broken" aria-hidden="true"></canvas>
+    <div class="nf">
+      <span class="nf__status"><i></i>Error 404 · Validation failed</span>
+      <div class="nf__code" aria-label="404">
+        <span class="hl-wait" aria-hidden="true">4</span><span class="hl-wait mid" aria-hidden="true">0</span><span class="hl-wait" aria-hidden="true">4</span>
+      </div>
+      <h1 class="nf__fade d1">This record didn’t pass the data-quality check</h1>
+      <p class="nf__fade d2">The page <span class="nf__path" id="nfPath">/</span> doesn’t exist – it may have moved, or the link has a typo.
+        Everything worth reading is on the profile.</p>
+      <div class="hero__actions nf__fade d3">
+        <a class="btn btn--primary" href="/">Back to the profile</a>
+        <a class="btn" href="/#experience">Experience</a>
+        <a class="btn" href="/#projects">Projects</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer wrap">© Stanislav Ferenc</footer>
+
+  <script>
+    (function () {
+      var p = document.getElementById("nfPath");
+      p.textContent = location.protocol === "file:" ? "/example-missing-page" : decodeURIComponent(location.pathname + location.search);
+      // digits spin in one after another (same motion as the profile headline)
+      var digits = [].slice.call(document.querySelectorAll(".nf__code span"));
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        digits.forEach(function (d, i) {
+          setTimeout(function () { d.classList.remove("hl-wait"); d.classList.add("hl-spin"); }, 250 + i * 450);
+        });
+      }
+      // theme toggle, shared with the profile page
+      var root = document.documentElement;
+      document.getElementById("themeBtn").addEventListener("click", function () {
+        var dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+        root.dataset.theme = dark ? "light" : "dark";
+        try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+      });
+    })();
+  </script>
+  <script>
+    if (location.protocol === "file:") {   // local preview: point links at index.html
+      document.querySelectorAll('a[href^="/"]').forEach(function (a) { a.setAttribute("href", "index.html" + a.getAttribute("href").slice(1)); });
+      document.write('<script src="assets/js/banner.js"><\/script>');
+    }
+  </script>
+  <script src="/assets/js/banner.js" defer></script>
+</body>
+</html>

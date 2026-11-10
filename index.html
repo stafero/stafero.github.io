@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stanislav Ferenc – Professional Profile</title>
+  <meta name="description" content="Professional profile of Stanislav Ferenc: data &amp; AI governance, adoption and change, IT service delivery and telecom OSS/BSS – full experience, certifications, training and self-hosted projects.">
+  <link rel="canonical" href="https://stafero.github.io/">
+  <meta name="author" content="Stanislav Ferenc">
+  <!-- Social preview (LinkedIn, Teams, Slack, X) -->
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Stanislav Ferenc – Data &amp; AI Governance · Adoption &amp; Change · Responsible AI">
+  <meta property="og:description" content="20+ years bridging business, IT and partners – data quality and controls behind 5M+ subscriptions, governed AI in practice, full career history, certifications and self-hosted projects.">
+  <meta property="og:url" content="https://stafero.github.io/">
+  <meta property="og:image" content="https://stafero.github.io/assets/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/img/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+  <meta name="theme-color" content="#1f4f99">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <a class="brand" href="#top">Stanislav <span>Ferenc</span></a>
+      <nav class="nav" role="tablist" aria-label="Profile sections">
+        <a href="#experience" role="tab" data-tab="experience">Experience</a>
+        <a href="#projects" role="tab" data-tab="projects">Projects</a>
+        <a href="#skills" role="tab" data-tab="skills">Skills &amp; Credentials</a>
+        <a href="#training" role="tab" data-tab="training">Training</a>
+        <a href="#workshops" role="tab" data-tab="workshops">Workshops</a>
+        <a href="#references" role="tab" data-tab="references">References</a>
+      </nav>
+      <a class="btn btn--primary btn--sm" href="#contact">Contact</a>
+      <button class="theme" id="themeBtn" type="button" aria-label="Toggle dark mode">◐</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="hero-band">
+    <canvas class="hero__bg" id="heroCanvas" aria-hidden="true"></canvas>
+    <section class="hero wrap" id="top">
+      <div class="hero__text">
+        <p class="eyebrow" id="location"></p>
+        <h1 id="name"></h1>
+        <p class="headline" id="headline"></p>
+        <div id="summary" class="summary"></div>
+        <div class="hero__actions">
+          <a class="btn btn--primary" id="mailBtn" href="#">Email me</a>
+          <a class="btn" id="liBtn" href="#" target="_blank" rel="noopener">LinkedIn</a>
+          <button class="btn btn--ghost" id="cvBtn" type="button" onclick="window.print()" title="Opens the print dialog – choose “Save as PDF”">Download CV (PDF)</button>
+        </div>
+        <p class="cv-counter" id="cvCounter" hidden title="How many times the CV has been exported from this page">
+          <span class="cv-counter__dot" aria-hidden="true"></span>
+          <span class="cv-counter__label">CV downloads</span>
+          <b class="cv-counter__num" id="cvCount">0</b>
+        </p>
+      </div>
+      <dl class="stats" id="stats"></dl>
+    </section>
+    </div>
+
+    <div id="content" class="content-anchor" aria-hidden="true"></div>
+
+    <section class="section wrap tabpanel" id="experience" data-panel="experience">
+      <div class="section__head">
+        <h2>Experience</h2>
+        <p>Every role since graduation, newest first.</p>
+      </div>
+      <ol class="timeline" id="timeline"></ol>
+    </section>
+
+    <section class="section wrap tabpanel" id="stories" data-panel="experience">
+      <div class="section__head">
+        <h2>Success stories</h2>
+        <p>Three cases in challenge – action – result format.</p>
+      </div>
+      <div class="grid grid--3" id="storyGrid"></div>
+    </section>
+
+    <section class="section wrap tabpanel" id="projects" data-panel="projects">
+      <div class="section__head">
+        <h2>Self-hosted projects</h2>
+        <p>Experimental solutions I design, build, test and operate in my own lab. They run locally and are not publicly hosted – a live walkthrough is available on request.</p>
+      </div>
+      <div class="projects" id="projectList"></div>
+      <p class="note" id="projectsNote"></p>
+    </section>
+
+    <section class="section wrap tabpanel" id="skills" data-panel="skills">
+      <div class="section__head"><h2>Skills</h2></div>
+      <div class="grid grid--skills" id="skillGrid"></div>
+      <div class="langs">
+        <h3>Languages</h3>
+        <ul id="langList"></ul>
+      </div>
+    </section>
+
+    <section class="section wrap tabpanel" id="credentials" data-panel="skills">
+      <div class="section__head">
+        <h2>Certifications &amp; education</h2>
+      </div>
+      <div class="grid grid--2">
+        <div class="panel">
+          <h3>Certifications</h3>
+          <p class="panel__sub">Exam-based, industry-recognised</p>
+          <ul class="cred" id="certList"></ul>
+        </div>
+        <div class="panel">
+          <h3>Professional courses</h3>
+          <p class="panel__sub">Instructor-led and vendor training with certificate of completion</p>
+          <ul class="cred" id="courseList"></ul>
+        </div>
+      </div>
+      <div class="panel panel--edu">
+        <h3>Education</h3>
+        <ul class="cred" id="eduList"></ul>
+      </div>
+    </section>
+
+    <section class="section wrap tabpanel" id="training" data-panel="training">
+      <div class="section__head">
+        <h2>Continuous learning</h2>
+        <p>Self-paced training, mostly completed in 2026 – full lists below.</p>
+      </div>
+
+      <div class="panel">
+        <div class="panel__row">
+          <div>
+            <h3>Microsoft Learn</h3>
+            <p class="panel__sub" id="msTotals"></p>
+          </div>
+          <a class="link" id="msLink" href="#" target="_blank" rel="noopener">Verified transcript ↗</a>
+        </div>
+        <h4>Learning paths</h4>
+        <ul class="paths" id="msPaths"></ul>
+        <h4>Modules by topic</h4>
+        <div id="msModules"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__row">
+          <div>
+            <h3>Udemy</h3>
+            <p class="panel__sub" id="udemyTotals"></p>
+          </div>
+        </div>
+        <ul class="udemy" id="udemyList"></ul>
+      </div>
+    </section>
+
+    <section class="section wrap tabpanel" id="workshops" data-panel="workshops">
+      <div class="section__head">
+        <h2>Workshops &amp; events</h2>
+        <p>Industry workshops and community events I attend to stay close to practice in AI, security and risk.</p>
+      </div>
+      <ol class="events" id="eventList"></ol>
+    </section>
+
+    <section class="section wrap tabpanel" id="references" data-panel="references">
+      <div class="section__head">
+        <h2>What colleagues say</h2>
+        <p>Excerpts from recommendations on LinkedIn.</p>
+      </div>
+      <div class="grid grid--2" id="recGrid"></div>
+      <p class="note"><a class="link" id="recLink" href="#" target="_blank" rel="noopener">Read the full recommendations on LinkedIn ↗</a></p>
+    </section>
+
+    <section class="section wrap contact" id="contact">
+      <h2>Get in touch</h2>
+      <p>Open to roles in data &amp; AI governance and excellence, adoption and change, IT service delivery and quality leadership.</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" id="mailBtn2" href="#"></a>
+        <a class="btn" id="liBtn2" href="#" target="_blank" rel="noopener">LinkedIn profile</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer wrap">
+    <span id="footName"></span> · <span id="updated"></span>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/banner.js" defer></script>
+  <script src="assets/js/counter.js" defer></script>
+</body>
+</html>
