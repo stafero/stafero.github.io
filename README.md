@@ -47,6 +47,12 @@ The site is live at <https://stafero.github.io/> after the first deployment fini
 
 ## Later updates
 
+GitHub Pages lets browsers cache CSS/JS for 10 minutes. So that visitors get the new
+files immediately, raise the version tag `?v=…` on the `<link>`/`<script>` lines in
+`index.html` and `404.html` whenever you change a CSS or JS file (e.g. `?v=20261124-1`).
+A plain `data.js` content change needs it too.
+
+
 ```bash
 git add .
 git commit -m "Update workshops"
