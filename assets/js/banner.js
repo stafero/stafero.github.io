@@ -32,12 +32,13 @@
   }
 
   function resize() {
-    const r = band.getBoundingClientRect();
-    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    const r = canvas.getBoundingClientRect();
+    // phones: lower pixel density keeps the animation light on battery and GPU
+    DPR = Math.min(window.devicePixelRatio || 1, r.width < 700 ? 1.5 : 2);
     W = Math.max(1, r.width); H = Math.max(1, r.height);
     canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    const count = Math.max(24, Math.min(90, Math.round((W * H) / 13000)));
+    const count = Math.max(20, Math.min(90, Math.round((W * H) / (W < 700 ? 11000 : 13000))));
     nodes = Array.from({ length: count }, (_, i) => ({
       x: Math.random() * W, y: Math.random() * H,
       vx: (Math.random() - 0.5) * 0.18, vy: (Math.random() - 0.5) * 0.18,
@@ -152,8 +153,12 @@
   document.addEventListener("visibilitychange", () => (document.hidden ? stop() : visible && start()));
   reduce.addEventListener && reduce.addEventListener("change", () => (reduce.matches ? (stop(), draw()) : start()));
 
-  let rt;
-  window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(resize, 150); });
+  let rt, lastW = window.innerWidth;
+  // iOS fires "resize" whenever the address bar slides in/out – only rebuild when the width really changes
+  window.addEventListener("resize", () => {
+    if (window.innerWidth === lastW) return;
+    lastW = window.innerWidth; clearTimeout(rt); rt = setTimeout(resize, 150);
+  });
   // re-read colours when the theme toggles or the OS scheme changes
   new MutationObserver(() => { readColors(); if (!running) draw(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { readColors(); if (!running) draw(); });

@@ -21,6 +21,7 @@
     @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bad: #fb7a4a; } }
     body { min-height: 100vh; display: flex; flex-direction: column; }
     .nf-band { flex: 1; display: grid; place-items: center; border-bottom: 0; min-height: calc(100vh - 57px - 70px); }
+    .nf-band .hero__bg { height: 100%; bottom: 0; }
     .nf-band .hero__bg { -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,.35) 0%, rgba(0,0,0,.6) 40%, #000 80%);
                                  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,.35) 0%, rgba(0,0,0,.6) 40%, #000 80%); }
     .nf { position: relative; z-index: 1; text-align: center; padding: 48px 16px; max-width: 640px; }

@@ -64,7 +64,7 @@ h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); letter-spacing: -.02em; margin: 0; }
 .hl-anim .hl-part, .hl-anim .hl-sep { visibility: hidden; opacity: 0; }
 .hl-anim .hl-sep.hl-in { visibility: visible; opacity: 1; transition: opacity .4s ease; }
 .hl-anim .hl-part.hl-in { visibility: visible; opacity: 1; }
-.hl-spin { animation: hl-spin 1.6s cubic-bezier(.45, .05, .25, 1) both; }
+.hl-spin { animation: hl-spin 1.6s cubic-bezier(.45, .05, .25, 1) both; will-change: transform, opacity; }
 @keyframes hl-spin {
   0%   { transform: rotateX(-360deg); opacity: 0; }
   20%  { opacity: 1; }
@@ -98,6 +98,29 @@ h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); letter-spacing: -.02em; margin: 0; }
 .stat dd { margin: 0; font-size: 1.6rem; font-weight: 700; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
 .stat dd small { font-size: .9rem; font-weight: 500; margin-left: 2px; }
 
+/* Phones & tablets: same single turn, drawn as a 2D flip (no 3D perspective),
+   which Safari on iOS renders smoothly */
+@media (max-width: 860px), (hover: none) {
+  .headline { perspective: none; }
+  .hl-spin { animation-name: hl-flip; animation-duration: 1.3s; }
+}
+@keyframes hl-flip {
+  0%   { transform: scaleY(1);  opacity: 0; }
+  12%  { opacity: 1; }
+  25%  { transform: scaleY(0); }
+  50%  { transform: scaleY(-1); }
+  75%  { transform: scaleY(0); }
+  100% { transform: scaleY(1);  opacity: 1; }
+}
+/* Phones: one headline part per line instead of an orphaned last word */
+@media (max-width: 600px) {
+  .headline { margin-bottom: .9em; line-height: 1.45; }
+  .headline .hl-sep { display: none; }
+  .headline .hl-part { display: block; width: fit-content; }
+  .headline .hl-part::before { content: ""; display: inline-block; width: 6px; height: 6px; margin: 0 10px 2px 0;
+    border-radius: 1px; background: currentColor; transform: rotate(45deg); opacity: .55; vertical-align: middle; }
+}
+
 /* ---------- Animated banner behind the hero ---------- */
 .hero-band { position: relative; overflow: hidden; border-bottom: 1px solid var(--line);
   background: radial-gradient(1200px 400px at 85% 0%, var(--accent-soft), transparent 70%); }
@@ -107,6 +130,7 @@ h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); letter-spacing: -.02em; margin: 0; }
 .hero { position: relative; z-index: 1; }
 .stat { box-shadow: 0 1px 2px rgba(0,0,0,.04); }
 @media (max-width: 860px) {
+  .hero__bg { bottom: auto; height: min(100%, 640px); }   /* animate only the top of the long phone hero */
   .hero__bg { -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.2));
                       mask-image: linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.2)); }
 }

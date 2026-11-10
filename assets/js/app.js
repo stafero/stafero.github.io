@@ -147,6 +147,12 @@
   /* Tabs: one group of sections visible at a time; hash-addressable */
   const panels = [...document.querySelectorAll(".tabpanel")];
   const tabOf = (id) => { const el = document.getElementById(id); return el && el.dataset.panel; };
+  // Scroll so the target sits just below the sticky header (header height differs on phones)
+  function jumpTo(el, smooth) {
+    const head = document.querySelector(".topbar").offsetHeight;
+    const y = el.getBoundingClientRect().top + window.scrollY - head - 8;
+    window.scrollTo({ top: Math.max(0, y), behavior: smooth ? "smooth" : "auto" });
+  }
   function showTab(tab, scroll) {
     if (!panels.some((p) => p.dataset.panel === tab)) tab = "experience";
     panels.forEach((p) => (p.hidden = p.dataset.panel !== tab));
@@ -157,8 +163,8 @@
     });
     const bar = document.querySelector(".nav"), act = bar.querySelector(".active");
     if (act) bar.scrollLeft = act.offsetLeft - bar.offsetLeft - (bar.clientWidth - act.offsetWidth) / 2;
-    if (scroll && window.scrollY > document.getElementById("content").offsetTop - 80)
-      document.getElementById("content").scrollIntoView({ behavior: "smooth", block: "start" });
+    // Always bring the chosen section into view (on phones the hero fills the whole screen)
+    if (scroll) jumpTo(panels.find((p) => !p.hidden), true);
   }
   document.querySelectorAll("[data-tab]").forEach((a) =>
     a.addEventListener("click", (ev) => {
@@ -169,7 +175,9 @@
   );
   const startId = location.hash.slice(1);
   showTab(tabOf(startId) || "experience", false);
-  if (startId && tabOf(startId) && startId !== tabOf(startId)) document.getElementById(startId).scrollIntoView();
+  // Deep link (e.g. stafero.github.io/#training): open that tab and jump to it
+  if (startId && tabOf(startId))
+    setTimeout(() => jumpTo(startId === tabOf(startId) ? panels.find((p) => !p.hidden) : document.getElementById(startId), false), 0);
 
   /* Footer */
   $("footName").textContent = "© " + p.name;
