@@ -1,6 +1,7 @@
 /* =========================================================================
    CV download counter
-   - Shows how often the CV was exported ("Download CV (PDF)" or Ctrl+P).
+   - Shows how often the CV was exported: the "Download CV (PDF)" button
+     (works on every device, incl. iPhone/Safari) or the browser's own print (Ctrl+P).
    - Uses a free public counter service (config: cvCounter in data.js).
    - Counts at most once per browser session.
    - Owner opt-out: open the page once with  ?nocount  (or #nocount) and this
@@ -42,7 +43,8 @@
   function show() { box.hidden = false; requestAnimationFrame(() => box.classList.add("is-ready")); }
 
   async function call(action) {
-    const r = await fetch(url(action), { cache: "no-store" });
+    // keepalive: the request completes even while the print dialog opens or the page is left
+    const r = await fetch(url(action), { cache: "no-store", keepalive: true });
     if (r.status === 404 && action === "get") return 0;          // not created yet = nobody downloaded yet
     if (!r.ok) throw new Error(r.status);
     const j = await r.json();
@@ -67,5 +69,6 @@
       show();
     }).catch(() => {});
   }
-  window.addEventListener("beforeprint", count);
+  window.cvCounterHit = count;                        // called by the button (app.js) – Safari on iPhone has no print events
+  window.addEventListener("beforeprint", count);   // Ctrl+P / browser menu on desktop
 })();

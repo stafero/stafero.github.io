@@ -192,6 +192,12 @@
     try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
   });
 
+  /* "Download CV (PDF)": count first (counter.js), then open the print dialog */
+  $("cvBtn").addEventListener("click", () => {
+    if (typeof window.cvCounterHit === "function") window.cvCounterHit();
+    window.print();
+  });
+
   /* ---------- CV-style print / PDF export ----------
      Printing (button or Ctrl+P) always uses this dedicated A4 layout:
      header card with QR, key results, profile + skills sidebar, experience
@@ -280,11 +286,13 @@
           <ul class="cv-learn__list">${udemyDone.map((c) => `<li>${esc(c.title)}</li>`).join("")}</ul></div>
       </div>`, "cv-keep");
 
+    // Page frame lives in the table header/footer: Chrome, Edge and Firefox repeat it on every page;
+    // Safari (iPhone/iPad/Mac) shows it once – either way it never overlaps the content.
     const html = `
-      <div class="cv-bar" aria-hidden="true"></div>
-      <div class="cv-foot" aria-hidden="true"><span>${esc(p.name)} · Curriculum Vitae</span><span>${site}</span></div>
-      <table class="cv-page"><thead><tr><td><div class="cv-pad cv-pad--top"></div></td></tr></thead>
-      <tfoot><tr><td><div class="cv-pad"></div></td></tr></tfoot><tbody><tr><td>
+      <table class="cv-page">
+      <thead><tr><td><div class="cv-top"><div class="cv-bar"></div></div></td></tr></thead>
+      <tfoot><tr><td><div class="cv-bottom"><div class="cv-foot"><span>${esc(p.name)} · Curriculum Vitae</span><span>${site}</span></div></div></td></tr></tfoot>
+      <tbody><tr><td>
         ${head}
         ${stats}
         ${intro}
@@ -295,6 +303,12 @@
       </td></tr></tbody></table>`;
     const el = document.createElement("div");
     el.id = "cv"; el.className = "cv"; el.innerHTML = html;
+    // Safari/WebKit (all iPhone/iPad browsers, Safari on Mac) ignores the A4 page setup and adds its own
+    // margins: use a simpler single-column flow there so nothing is pushed to the next page
+    const ua = navigator.userAgent;
+    const webkitPrint = /iP(hone|ad|od)/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1) ||
+      (/Safari/.test(ua) && !/Chrome|Chromium|Edg|OPR|Firefox/.test(ua));
+    if (webkitPrint) el.classList.add("cv--webkit");
     document.body.appendChild(el);
   })();
 })();

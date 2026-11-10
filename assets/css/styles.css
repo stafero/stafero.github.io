@@ -279,14 +279,24 @@ h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); letter-spacing: -.02em; margin: 0; }
   .cv h1, .cv h2, .cv h3, .cv p { margin: 0; }
   .cv ul, .cv ol { margin: 0; padding: 0; list-style: none; }
 
-  /* repeating page frame: accent bar on top, footer line at the bottom of every page */
-  .cv-bar { position: fixed; top: 0; left: 0; right: 0; height: 3.2mm; background: linear-gradient(90deg, #1f4f99, #2f6fd0 55%, #7aa7ff); }
-  .cv-foot { position: fixed; bottom: 6mm; left: 18mm; right: 18mm; display: flex; justify-content: space-between;
-    border-top: .6pt solid var(--line); padding-top: 2mm; font-size: 7.4pt; color: var(--mut); letter-spacing: .03em; }
+  /* page frame (thead/tfoot): accent bar on top, footer line at the bottom */
   .cv-page { width: 100%; border-collapse: collapse; }
   .cv-page td { padding: 0 16mm; }
-  .cv-pad { height: 16mm; }
-  .cv-pad--top { height: 12mm; }
+  .cv-top { height: 12mm; }
+  .cv-bar { height: 3.2mm; margin: 0 -16mm; background: linear-gradient(90deg, #1f4f99, #2f6fd0 55%, #7aa7ff); }
+  .cv-bottom { height: 16mm; display: flex; align-items: flex-end; padding-bottom: 6mm; }
+  .cv-foot { flex: 1; display: flex; justify-content: space-between; border-top: .6pt solid var(--line); padding-top: 2mm;
+    font-size: 7.4pt; color: var(--mut); letter-spacing: .03em; }
+
+  /* Safari / iOS: its own margins + header lines already frame the page */
+  .cv--webkit .cv-page td { padding: 0 4mm; }
+  .cv--webkit .cv-top { height: 3mm; }
+  .cv--webkit .cv-bar { margin: 0 -4mm; height: 2mm; }
+  .cv--webkit .cv-bottom { height: 10mm; padding-bottom: 0; }
+  .cv--webkit .cv-intro { display: block; }
+  .cv--webkit .cv-side { border-left: 0; padding-left: 0; }
+  .cv--webkit .cv-intro, .cv--webkit .cv-grid2 { break-inside: auto; }
+  .cv--webkit .cv-grid2 { display: block; }
 
   /* header card */
   .cv-head { display: flex; justify-content: space-between; align-items: center; gap: 12pt;
