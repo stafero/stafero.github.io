@@ -42,8 +42,8 @@
   function show() { box.hidden = false; requestAnimationFrame(() => box.classList.add("is-ready")); }
 
   async function call(action) {
-    // keepalive: the request completes even if the browser switches to the PDF
-    const r = await fetch(url(action), { cache: "no-store", keepalive: true });
+    // note: no "keepalive" – the counter service answers such requests with an error
+    const r = await fetch(url(action), { cache: "no-store" });
     if (r.status === 404 && action === "get") return 0;          // not created yet = nobody downloaded yet
     if (!r.ok) throw new Error(r.status);
     const j = await r.json();
@@ -60,9 +60,9 @@
 
   // Count an export (button or Ctrl+P), once per session
   function count() {
-    if (local || optOut || sess("cvCounted")) return;
+    if (local || optOut || sess("cvCounted")) return Promise.resolve();
     sess("cvCounted", "1");
-    call("hit").then((v) => {
+    return call("hit").then((v) => {
       render(v);
       num.classList.remove("bump"); void num.offsetWidth; num.classList.add("bump");
       show();

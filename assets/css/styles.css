@@ -83,6 +83,7 @@ h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); letter-spacing: -.02em; margin: 0; }
   font-size: .78rem; color: var(--muted); letter-spacing: .02em; user-select: none;
   opacity: 0; transform: translateY(4px); transition: opacity .6s ease, transform .6s ease; }
 .cv-counter.is-ready { opacity: 1; transform: none; }
+.cv-counter[hidden] { display: none; }
 .cv-counter__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); position: relative; flex: none; }
 .cv-counter__dot::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 1px solid var(--good);
   opacity: 0; animation: cv-ping 2.8s ease-out infinite; }

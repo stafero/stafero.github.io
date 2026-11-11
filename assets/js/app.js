@@ -194,8 +194,14 @@
 
   /* "Download CV (PDF)" downloads the ready-made file assets/cv/Stanislav_Ferenc_CV.pdf
      (identical on every device); the click is counted by counter.js */
-  $("cvBtn").addEventListener("click", () => {
-    if (typeof window.cvCounterHit === "function") window.cvCounterHit();
+  // The count is sent first (max. 1.5 s wait), then the download starts – so the request is not
+  // cut off when a phone switches to its PDF viewer.
+  let cvGo = false;
+  $("cvBtn").addEventListener("click", (ev) => {
+    if (cvGo || typeof window.cvCounterHit !== "function") return;   // second pass: let the browser download
+    ev.preventDefault();
+    const done = () => { cvGo = true; $("cvBtn").click(); cvGo = false; };
+    Promise.race([window.cvCounterHit(), new Promise((r) => setTimeout(r, 1500))]).then(done, done);
   });
 
   /* ---------- CV layout (A4) ----------
