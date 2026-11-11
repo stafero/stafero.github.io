@@ -5,13 +5,14 @@
 window.PROFILE = {
   updated: "November 2026",
 
-  /* CV download counter (free public counter service, no account needed).
-     Change "key" to restart from zero. Set enabled: false to hide it. */
+  /* CV download counter (GoatCounter, free account "stafero").
+     offset = downloads counted before the switch to GoatCounter. Set enabled: false to hide it. */
   cvCounter: {
     enabled: true,
-    service: "https://abacus.jasoncameron.dev",
-    namespace: "stafero-github-io",
-    key: "cv-downloads"
+    site: "https://stafero.goatcounter.com",
+    path: "cv-download",
+    title: "CV download",
+    offset: 12
   },
 
   person: {

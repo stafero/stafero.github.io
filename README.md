@@ -2,7 +2,7 @@
 
 Professional profile and portfolio of **Stanislav Ferenc** – published with GitHub Pages at <https://stafero.github.io/>.
 
-Plain static site: no build step, no framework, no cookies and no analytics. The only external call is the CV download counter (see Notes).
+Plain static site: no build step, no framework, no cookies and no analytics. The only external calls are for the CV download counter (GoatCounter, see Notes).
 
 ## Structure
 
@@ -69,4 +69,4 @@ git push
 - The banner animation pauses when off-screen and is replaced by a still frame for visitors who prefer reduced motion.
 - The headline (`person.headline` in data.js, parts separated by " · ") is revealed part by part, each part spinning once, on every page load; with reduced motion it is shown immediately.
 - The e-mail address is assembled at runtime to keep it out of simple plain-text scrapers.
-- CV download counter: uses the free public counter service abacus.jasoncameron.dev (settings `cvCounter` in data.js). The number is read on each page load and increased when "Download CV (PDF)" is clicked, at most once per browser session. Open `https://stafero.github.io/?nocount` once in your own browsers so your own tests are not counted (`?count` undoes it). When opened from disk the counter shows a preview and never contacts the service.
+- CV download counter: counted with GoatCounter (account "stafero", dashboard https://stafero.goatcounter.com, settings `cvCounter` in data.js). Only clicks on "Download CV (PDF)" are counted, as the event "cv-download" – no page-view tracking. At most once per browser session. Open `https://stafero.github.io/?nocount` once in your own browsers so your own tests are not counted (`?count` undoes it). In GoatCounter, Settings → "Allow adding visitor counts on your website" must stay enabled.

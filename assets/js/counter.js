@@ -1,12 +1,14 @@
 /* =========================================================================
-   CV download counter
+   CV download counter – powered by GoatCounter (stafero.goatcounter.com)
    - Shows how often the CV was downloaded (click on "Download CV (PDF)").
-   - Uses a free public counter service (config: cvCounter in data.js).
+   - Only the download is counted, as an event called "cv-download";
+     no page views or visitor tracking (GoatCounter's script is NOT loaded).
    - Counts at most once per browser session.
    - Owner opt-out: open the page once with  ?nocount  (or #nocount) and this
      browser is never counted again. Undo with  ?count .
    - Opened from disk (file://) it shows a preview and never calls the service.
-   - If the service is unreachable the pill simply stays hidden.
+   - If GoatCounter is unreachable the pill simply stays hidden.
+   Requires in GoatCounter: Settings → "Allow adding visitor counts on your website".
    ========================================================================= */
 (function () {
   const cfg = (window.PROFILE || {}).cvCounter;
@@ -15,8 +17,10 @@
   if (!cfg || !cfg.enabled || !box || !num) return;
 
   const local = location.protocol === "file:";
-  const base = `${cfg.service}/%s/${encodeURIComponent(cfg.namespace)}/${encodeURIComponent(cfg.key)}`;
-  const url = (action) => base.replace("%s", action);
+  const offset = cfg.offset | 0;                       // downloads counted before the switch to GoatCounter
+  const readUrl = () => `${cfg.site}/counter/${encodeURIComponent(cfg.path)}.json`;
+  const hitUrl = () => `${cfg.site}/count?p=${encodeURIComponent(cfg.path)}&t=${encodeURIComponent(cfg.title || cfg.path)}` +
+    `&e=true&rnd=${Math.random().toString(36).slice(2)}`;
 
   const store = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } };
   const sess = (k, v) => { try { if (v === undefined) return sessionStorage.getItem(k); sessionStorage.setItem(k, v); } catch (e) { return null; } };
@@ -26,7 +30,7 @@
   const optOut = store("cvCounterOptOut") === "1";
 
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let shown = 0;
+  let shown = 0, ready = false;
   function render(value, animate) {
     const target = Math.max(0, value | 0);
     if (!animate || reduce || target - shown < 2) { shown = target; num.textContent = target.toLocaleString("de-CH"); return; }
@@ -39,34 +43,39 @@
     };
     requestAnimationFrame(tick);
   }
-  function show() { box.hidden = false; requestAnimationFrame(() => box.classList.add("is-ready")); }
+  function show() { ready = true; box.hidden = false; requestAnimationFrame(() => box.classList.add("is-ready")); }
 
-  async function call(action) {
-    // note: no "keepalive" – the counter service answers such requests with an error
-    const r = await fetch(url(action), { cache: "no-store" });
-    if (r.status === 404 && action === "get") return 0;          // not created yet = nobody downloaded yet
-    if (!r.ok) throw new Error(r.status);
-    const j = await r.json();
-    return typeof j.value === "number" ? j.value : 0;
+  // Read the current number (404 = nothing counted yet)
+  async function read() {
+    const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 6000);
+    try {
+      const r = await fetch(readUrl(), { cache: "no-store", signal: ctl.signal });
+      if (r.status === 404) return 0;
+      if (!r.ok) throw new Error(r.status);
+      const j = await r.json();
+      return parseInt(String(j.count || "0").replace(/\D/g, ""), 10) || 0;
+    } finally { clearTimeout(t); }
   }
 
-  // Initial value
   if (local) {
     box.title = "Local preview – the live number appears once the page is published";
-    render(0); show();
+    render(offset); show();
   } else {
-    call("get").then((v) => { render(v, true); show(); }).catch(() => {});
+    read().then((v) => { render(v + offset, true); show(); }).catch(() => {});
   }
 
-  // Count an export (button or Ctrl+P), once per session
+  // Count one download (a 1×1 image request – works on every browser, no CORS needed)
   function count() {
     if (local || optOut || sess("cvCounted")) return Promise.resolve();
     sess("cvCounted", "1");
-    return call("hit").then((v) => {
-      render(v);
-      num.classList.remove("bump"); void num.offsetWidth; num.classList.add("bump");
-      show();
-    }).catch(() => {});
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = img.onerror = () => {
+        if (ready) { render(shown + 1); num.classList.remove("bump"); void num.offsetWidth; num.classList.add("bump"); }
+        resolve();
+      };
+      img.src = hitUrl();
+    });
   }
   window.cvCounterHit = count;   // called by the download button (app.js)
 })();
