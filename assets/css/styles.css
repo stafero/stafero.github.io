@@ -357,6 +357,10 @@ h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); letter-spacing: -.02em; margin: 0; }
   .cv-bullets li:last-child { break-before: avoid; }   /* never leave a single bullet alone on a new page */
   .cv-bullets b { color: var(--ink); }
 
+  /* CV PDF: work experience starts on page 2; achievements list */
+  .cv-sec--exp { break-before: page; }
+  .cv-learn__list em { color: var(--mut); font-style: normal; font-size: 7.4pt; }
+
   /* projects: each card stays on one page */
   .cv-proj { border: .7pt solid var(--line); border-left: 3pt solid var(--c); border-radius: 5pt; padding: 10pt 12pt; margin-bottom: 10pt;
     break-inside: avoid; page-break-inside: avoid; }

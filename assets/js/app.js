@@ -85,6 +85,7 @@
       </div>
       <p class="pitch">${esc(pr.pitch || pr.summary)}</p>
       <details class="more"><summary>Technical details</summary><ul class="bullets">${pr.highlights.map((h) => "<li>" + h + "</li>").join("")}</ul></details>
+      ${pr.link ? `<p class="project__link"><a class="btn btn--ghost" href="${esc(pr.link)}" target="_blank" rel="noopener">Try it online ↗</a></p>` : ""}
       ${tags(pr.stack)}
     </article>`)
     .join("");
@@ -126,7 +127,7 @@
   const today = new Date().toISOString().slice(0, 10);
   const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const fmtDate = (iso) => { const [y, m, dd] = iso.split("-"); return `${+dd} ${MON[+m - 1]} ${y}`; };
-  const evStatus = (w) => (w.date >= today ? ["Upcoming", "st--prog"] : w.status === "attended" ? ["Attended", "st--done"] : ["Registered", "st--plan"]);
+  const evStatus = (w) => (w.status === "attended" ? ["Attended", "st--done"] : w.date >= today ? ["Upcoming", "st--prog"] : ["Registered", "st--plan"]);
   $("eventList").innerHTML = (P.workshops || [])
     .slice().sort((a, b) => b.date.localeCompare(a.date))
     .map((w) => { const [lbl, cls] = evStatus(w); return `<li class="event">
@@ -218,6 +219,7 @@
     const qrEl = document.querySelector("#liQr svg");
     const qrSvg = qrEl ? qrEl.outerHTML : "";
 
+    const twin = P.projects.find((x) => x.link);
     const head = `<header class="cv-head">
         <div class="cv-head__main">
           <h1>${esc(p.name)}</h1>
@@ -227,6 +229,7 @@
             <span><a href="mailto:${esc(email)}">${esc(email)}</a></span>
             <span><a href="${esc(p.linkedin)}">${esc(liHost)}</a></span>
             <span><a href="https://${site}/">${site}</a></span>
+            ${twin ? `<span><a href="${esc(twin.link)}">Digital Twin (live)</a></span>` : ""}
           </p>
         </div>
         ${qrSvg ? `<div class="cv-qr">${qrSvg}<small>Scan · LinkedIn</small></div>` : ""}
@@ -239,7 +242,7 @@
     const skillGroups = P.skills.filter((g) => !/telecom|tools/i.test(g.group)).slice(0, 4);
     const intro = `<div class="cv-intro">
         <div class="cv-intro__main">
-          ${sec("Professional Profile", p.summary.map((s) => `<p>${esc(s)}</p>`).join(""))}
+          ${sec("Professional Profile", p.summary.concat(p.cvSummaryExtra || []).map((s) => `<p>${esc(s)}</p>`).join(""))}
           ${sec("Languages", `<ul class="cv-langs">${p.languages.map(([l, v]) => `<li><b>${esc(l)}</b><span>${esc(v)}</span></li>`).join("")}</ul>`)}
         </div>
         <aside class="cv-side">
@@ -265,7 +268,7 @@
         <p>${esc(x.pitch || x.summary)}</p>
         ${pills(x.stack, "cv-pills--tags")}
       </article>`).join("")}
-      <p class="cv-note">Self-hosted and running locally – a live walkthrough is available on request.</p></div>`;
+      <p class="cv-note">Self-hosted projects run locally – a live walkthrough is available on request; the Digital Twin is live online.</p></div>`;
 
     const cred = (c) => `<li><span class="cv-yr">${esc(c.year)}</span><span><b>${esc(c.name)}</b><small>${esc(c.issuer)}${c.note ? " · " + esc(c.note) : ""}</small></span></li>`;
     // CV only: the six SQS PractiQ® Advanced Level modules are merged into one line (the web page lists them separately)
@@ -286,11 +289,12 @@
       ${sec("Professional Courses", `<ul class="cv-creds cv-creds--tight cv-creds--cols">${courses.map(cred).join("")}</ul>`)}`;
 
     const udemyDone = P.udemy.filter((c) => c.status === "done");
+    const udemyOpen = P.udemy.filter((c) => c.status !== "done");
     const learning = sec("Continuous Learning", `<div class="cv-learn">
         <div class="cv-learn__box"><h3>Microsoft Learn <small>${P.msLearn.totals.paths} learning paths · ${P.msLearn.totals.modules} modules</small></h3>
           ${pills(Object.keys(P.msLearn.modules), "cv-pills--sm")}</div>
-        <div class="cv-learn__box"><h3>Udemy <small>${udemyDone.length} courses completed</small></h3>
-          <ul class="cv-learn__list">${udemyDone.map((c) => `<li>${esc(c.title)}</li>`).join("")}</ul></div>
+        <div class="cv-learn__box"><h3>Udemy <small>${udemyDone.length} completed · ${udemyOpen.filter((c) => c.status === "progress").length} in progress · ${udemyOpen.filter((c) => c.status === "planned").length} enrolled</small></h3>
+          <ul class="cv-learn__list">${udemyDone.map((c) => `<li>${esc(c.title)}</li>`).join("")}${udemyOpen.map((c) => `<li>${esc(c.title)} <em>(${c.status === "progress" ? "in progress, " + c.progress + "%" : "enrolled"})</em></li>`).join("")}</ul></div>
       </div>`, "cv-keep");
 
     // Page frame lives in the table header/footer: Chrome, Edge and Firefox repeat it on every page;
@@ -303,7 +307,7 @@
         ${head}
         ${stats}
         ${intro}
-        ${sec("Work Experience", exp)}
+        ${sec("Work Experience", exp, "cv-sec--exp")}
         ${sec("Self-Hosted Projects", proj, "cv-sec--projects")}
         ${creds}
         ${learning}

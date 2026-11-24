@@ -26,6 +26,9 @@ window.PROFILE = {
       "My results come from changing how people work with data, not from tools alone: preventive data-quality controls embedded as standard procedure, cross-functional task forces led without formal authority, and a data-critical migration of 100,000+ customers. I move comfortably between executive status reporting and hands-on coaching.",
       "I build AI governance in practice: in my self-hosted projects I design governed AI – usage caps, full audit logging, customer data scoping and policy-as-code – and I am trained in agentic AI governance and red-teaming, responsible generative AI, ISO/IEC 27001 and IT audit."
     ],
+    cvSummaryExtra: [
+      "Hands-on AI engineering: I build with Claude Code and AI agents daily – a governed TISAX® / VDA ISA assessment platform, a secure polling platform and a public Digital Twin that answers questions about my background in the visitor's language. Based in the Basel region, Swiss C permit, available immediately."
+    ],
     pageNote: "Here you will find my complete career history, certifications and training, and a selection of those projects.",
     languages: [
       ["English", "C2"],
@@ -147,6 +150,26 @@ window.PROFILE = {
 
   projects: [
     {
+      name: "Digital Twin – AI profile assistant",
+      oneLiner: "Public, serverless chat assistant that answers questions about my professional background in the first person – grounded in a curated profile, with guardrails, rate limits and Telegram contact.",
+      pitch: "Lets recruiters, hiring managers and colleagues ask questions about my professional background and get answers any time of day, in their own language. Instead of searching through CV versions and certificates, visitors simply ask, and the twin answers in the first person, based on a curated profile. It never invents facts: when it doesn't know something, it says so and points to my email. Visitors can also leave me a message on the website or on Telegram. Built as a small, portable reference for governed, grounded AI on a free-tier budget.",
+      kind: "Web application · serverless · public",
+      period: "2026 – ongoing",
+      status: "Live · try it online",
+      link: "https://ferenc-stanislav--twin.us-east.modal.run",
+      summary: "Public AI assistant that answers questions about my professional background.",
+      highlights: [
+        "<b>Grounded answers:</b> curated knowledge base compiled from my CV versions, certificates and projects; the full profile is sent as context, with automatic BM25 retrieval when it grows. Strict prompt guardrails – first-person voice, replies in the visitor's language, off-topic and prompt-injection resistance, a distinction between exam-based certifications and course completions, and an explicit \"I don't know\" with a contact pointer. Personal data such as phone number and date of birth is kept out of the knowledge base.",
+        "<b>LLM access:</b> OpenAI Python library and OpenAI Agents SDK against OpenRouter (free models); ordered model list with fallback, retry on empty answers and reasoning-effort control. Provider-agnostic – any OpenAI-compatible endpoint works via configuration.",
+        "<b>Streaming chat UI:</b> FastAPI with Server-Sent Events; plain HTML/CSS/JS without a build step; Matrix, light and dark themes; mobile-optimised; embeddable via iframe.",
+        "<b>Channels:</b> Telegram bot (webhook with secret-token verification) with a \"message the owner\" relay and reply routing; website contact form that delivers to Telegram, protected by rate limit and honeypot.",
+        "<b>Governance & cost control:</b> per-visitor rate limits, a persisted daily cap on LLM calls, message length limits, metadata-only logging by default, and a background session counter with hashed IDs and admin-only statistics.",
+        "<b>Hosting:</b> Modal serverless (scale-to-zero, persistent volume for state, secrets management); free tier only; only one small adapter file is platform-specific.",
+        "<b>Engineering:</b> Python 3.13, automated test suite (55 tests, pytest), private GitHub repository; built with AI coding assistance (Claude)."
+      ],
+      stack: ["Python", "FastAPI", "Server-Sent Events", "OpenAI Agents SDK", "OpenRouter", "BM25", "Telegram Bot API", "Modal (serverless)", "pytest"]
+    },
+    {
       name: "Compliance self-assessment wizard",
       oneLiner: "Multi-tenant TISAX® / VDA ISA assessment platform with maturity scoring, executive reporting, licensing and governed AI assistance.",
       pitch: "Helps automotive suppliers and their consultants prepare for TISAX® – the information-security label the automotive industry requires across its supply chain. Instead of wrestling with a large Excel questionnaire, assessors are guided control by control, see maturity scores and gaps at a glance, and produce a management-ready executive summary and the official filled-in template with one click. AI assistance drafts answers and explains requirements under strict governance: every AI call is capped, logged and limited to the customer's own data. Designed as a licensable, multi-customer product.",
@@ -197,12 +220,12 @@ window.PROFILE = {
   projectsNote: "More self-hosted projects will be added as their documentation is completed.",
 
   skills: [
-    { group: "Data & AI Governance", items: ["Data Quality & Reconciliation", "Data Integrity Controls", "Responsible AI", "AI Risk & Guardrails", "LLM Audit Logging", "Policy-as-Code", "ISO/IEC 27001", "SOX Compliance", "Access Governance (IAM)"] },
+    { group: "Data & AI Governance", items: ["Data Quality & Reconciliation", "Data Integrity Controls", "Responsible AI", "AI Risk & Guardrails", "LLM Audit Logging", "LLM Cost & Usage Controls", "Policy-as-Code", "ISO/IEC 27001", "SOX Compliance", "Access Governance (IAM)"] },
     { group: "Adoption & Change", items: ["Policy-to-Practice Translation", "SOPs & Standards", "Training & Knowledge Transfer", "Onboarding", "Change & Release Management", "Stakeholder Engagement", "ITIL"] },
     { group: "Leadership & Reporting", items: ["Matrix Leadership", "Leading without Formal Authority", "Stakeholder Management (C-level to Operations)", "KPI & Maturity Frameworks", "Quality Gates & Go/No-Go", "Executive Reporting"] },
     { group: "Telecom OSS/BSS", items: ["CRM", "Order Management & Orchestration", "Billing & Mediation", "Service Fulfillment & Provisioning", "Revenue Assurance", "Amdocs Clarify", "Kenan Arbor", "OPSC", "SAP RM-CA (FI-CA)"] },
     { group: "Quality & Test Management", items: ["Test Strategy & Governance", "Risk-Based Testing", "SIT · UAT · Regression · E2E", "Defect Management", "Test Automation (Selenium, Playwright, Cypress)", "Load Testing (JMeter)"] },
-    { group: "Tools, Security & AI Engineering", items: ["Oracle SQL", "Jira", "Confluence", "HP ALM / Octane", "BMC Remedy ITSM", "Docker", "GitHub Actions", "OWASP Top 10", "WAF / IPS", "IAM & SSO (OIDC)", "LLM Integration", "AI Coding Agents", "n8n Automation", "Linux", "Windows", "M365"] }
+    { group: "Tools, Security & AI Engineering", items: ["Oracle SQL", "Jira", "Confluence", "HP ALM / Octane", "BMC Remedy ITSM", "Docker", "GitHub Actions", "OWASP Top 10", "WAF / IPS", "IAM & SSO (OIDC)", "LLM Integration", "OpenAI Agents SDK", "Grounded LLM Apps", "Prompt Guardrails", "AI Coding Agents", "n8n Automation", "FastAPI / Python", "Serverless (Modal)", "pytest", "Linux", "Windows", "M365"] }
 
   ],
 
@@ -317,7 +340,7 @@ window.PROFILE = {
     { title: "IT Audit – Complete Course: Plan and Deliver IT Audits", by: "Cyvitrix Learning", status: "done", date: "Aug 2026", points: ["End-to-end IT audit lifecycle: planning, scoping, risk assessment, fieldwork, reporting and follow-up", "IT General Controls (ITGC): access, change management, backup & recovery, IT operations", "Risk and control matrices (RCM), test plans, sampling and audit evidence / workpapers", "Mapping to COBIT, ISO 27001, NIST CSF, SOX, GDPR and SOC reports", "Auditing cloud, hybrid and on-premises environments; communicating findings and root causes"], skills: ["IT Audit", "ITGC", "Risk & Control Matrix", "Audit Evidence", "COBIT", "SOX", "NIST CSF", "GDPR", "SOC Reports", "Third-Party Risk"] },
     { title: "Complete Ethical Hacking and Cybersecurity Course", by: "Santiago Hernández", status: "done", date: "Jul 2026", points: ["Penetration testing methodology across the five phases – reconnaissance/OSINT to post-exploitation", "Vulnerability assessment and exploitation with Kali Linux, Nmap, Nessus, OpenVAS and Metasploit", "Web application attacks: SQL injection, XSS, CSRF – using Burp Suite and SQLmap", "Network attacks and defence: Man-in-the-Middle, ARP/DNS spoofing, traffic analysis with Wireshark", "Privilege escalation, credential attacks, social engineering/phishing and ML-based anomaly detection"], skills: ["Ethical Hacking", "Penetration Testing", "OSINT", "Vulnerability Assessment", "Kali Linux", "Metasploit", "Burp Suite", "Nmap", "Wireshark", "OWASP", "Social Engineering"] },
     { title: "ISC2 CISSP Full Course & Practice Exam", by: "Jason Dion · Dion Training Solutions", status: "done", date: "Jun 2026", points: ["All 8 CISSP domains – from security & risk management to software development security", "Security governance, compliance and risk frameworks: NIST RMF / CSF, ISO/IEC 27001, PCI DSS, SABSA", "Identity and access management (IAM), secure architecture (cloud, IoT, ICS, microservices)", "Threat modelling, security assessment & testing, incident response and business continuity", "Full-length practice exam"], skills: ["CISSP", "Security Governance", "Risk Management", "NIST RMF", "IAM", "Security Architecture", "Threat Modelling", "Incident Response", "Business Continuity"] },
-    { title: "AI Engineer Agentic Track: The Complete Agent & MCP Course", by: "Ed Donner · Ligency", status: "planned", points: ["Agentic AI with OpenAI Agents SDK, CrewAI, LangGraph, AutoGen, Google ADK and AWS Strands", "Model Context Protocol (MCP): building and consuming MCP servers and tools", "Multi-agent patterns: deep research, agent teams, agents that create agents, browser agents", "Structured outputs (Pydantic), guardrails, tool calling and agent deployment (Docker, Hugging Face Spaces)", "Capstone: autonomous trading floor – 4 agents, 6 MCP servers, 44 tools"], skills: ["Agentic AI", "MCP", "OpenAI Agents SDK", "CrewAI", "LangGraph", "AutoGen", "Google ADK", "Guardrails", "Structured Outputs"] },
+    { title: "AI Engineer Agentic Track: The Complete Agent & MCP Course", by: "Ed Donner · Ligency", status: "progress", progress: 32, points: ["Agentic AI with OpenAI Agents SDK, CrewAI, LangGraph, AutoGen, Google ADK and AWS Strands", "Model Context Protocol (MCP): building and consuming MCP servers and tools", "Multi-agent patterns: deep research, agent teams, agents that create agents, browser agents", "Structured outputs (Pydantic), guardrails, tool calling and agent deployment (Docker, Hugging Face Spaces)", "Capstone: autonomous trading floor – 4 agents, 6 MCP servers, 44 tools"], skills: ["Agentic AI", "MCP", "OpenAI Agents SDK", "CrewAI", "LangGraph", "AutoGen", "Google ADK", "Guardrails", "Structured Outputs"] },
     { title: "AI Engineer Production Track: Deploy LLMs & Agents at Scale", by: "Ligency · Ed Donner", status: "planned", points: ["LLMOps: deploying LLM and agent SaaS apps to production on AWS, Azure, GCP and Vercel", "Serverless AI architecture – AWS Lambda, API Gateway, S3, CloudFront, SQS, App Runner", "Amazon Bedrock, Bedrock AgentCore, SageMaker and Strands Agents for multi-agent systems", "Infrastructure as Code with Terraform and CI/CD with GitHub Actions (dev / test / prod)", "Enterprise-grade AI: observability, monitoring, guardrails, security and explainability"], skills: ["LLMOps", "AWS Bedrock", "Bedrock AgentCore", "SageMaker", "Serverless", "Terraform", "CI/CD", "Observability", "AI Guardrails", "Azure", "GCP"] },
     { title: "Website Hacking / Penetration Testing", by: "Zaid Sabih · zSecurity", status: "planned", points: ["Web application penetration testing lab with Kali Linux and Metasploitable", "OWASP-class vulnerabilities: SQL injection (incl. blind SQLi), XSS, CSRF, file upload, LFI/RFI, code execution", "Reconnaissance: subdomains, hidden files and technology fingerprinting", "Exploitation and post-exploitation with Burp Suite, OWASP ZAP, BeEF and Metasploit", "Secure coding: how to fix and prevent each vulnerability"], skills: ["Web App Pentesting", "SQL Injection", "XSS", "CSRF", "File Inclusion", "Burp Suite", "OWASP ZAP", "Metasploit", "Secure Coding"] }
   ],
@@ -327,16 +350,16 @@ window.PROFILE = {
     { date: "2026-12-05", title: "«Hack Apertus» Basel Finals", organizer: "aiLights Association", place: "Basel", type: "Community event", status: "registered",
       about: "Finals of the Basel hackathon on Apertus, Switzerland's open large language model – top teams pitch their prototypes, fireside chat with Phoeniqs and presentations of local tech communities.",
       link: "https://luma.com/rivvlso7" },
-    { date: "2026-11-24", title: "Your AI system has been compromised. What now?", organizer: "Swiss Cyber Institute", place: "Zürich", type: "Workshop", status: "registered",
-      about: "Hands-on AI security incident: working through a realistic scenario – impact assessment, containment, stakeholder involvement and safe return to operation – with a structured debrief.",
-      link: "https://swisscyberinstitute.com/resources/events/your-ai-system-has-been-compromised-what-now/" },
-    { date: "2026-11-24", title: "Morning Bytes: AI & Data Breakfast Series", organizer: "Deloitte", place: "Zürich / virtual", type: "Breakfast session", status: "registered",
+    { date: "2026-12-01", title: "DATA + AI WORLD TOUR Zürich", organizer: "Databricks", place: "Zürich", type: "Conference", status: "registered",
+      about: "Databricks' data and AI conference – keynotes, breakout sessions and hands-on training on building and governing AI apps and agents at scale (Agent Bricks, Unity AI Gateway, Genie, Lakebase), with customer sessions from Swiss and international enterprises.",
+      link: "https://dataaisummit.databricks.com/flow/db/wt26zrh/reg/page/landing" },
+    { date: "2026-11-24", title: "Morning Bytes: AI & Data Breakfast Series", organizer: "Deloitte", place: "Zürich / virtual", type: "Breakfast session", status: "attended",
       about: "How Swiss Post built an AI-ready data platform at scale (with AWS), followed by AI Tokenomics – the cost and value economics of running AI.",
       link: "https://mkto.deloitte.com/FY27-Q2-TT-EV-AI--Data-Breakfast-Series-12-CH_Registration-page-Social.html" },
-    { date: "2026-11-23", title: "Basel Data Science & AI Meetup November 2026", organizer: "Basel Data Science & AI", place: "Basel", type: "Meetup", status: "registered",
+    { date: "2026-11-23", title: "Basel Data Science & AI Meetup November 2026", organizer: "Basel Data Science & AI", place: "Basel", type: "Meetup", status: "attended",
       about: "Three practical talks on ML/AI deployment: making models more efficient (FHNW), AI agents with a knowledge graph and MCP tools for data-warehouse modernisation (Swisscom), and memory design for an AI coach.",
       link: "https://www.meetup.com/basel-data-scientists/events/317093429/" },
-    { date: "2026-11-23", title: "The Autonomous (SAP) SOC: AI Investigates, Humans Decide", organizer: "Swiss Cyber Institute / Xiting", place: "Online", type: "Webinar", status: "registered",
+    { date: "2026-11-23", title: "The Autonomous (SAP) SOC: AI Investigates, Humans Decide", organizer: "Swiss Cyber Institute / Xiting", place: "Online", type: "Webinar", status: "attended",
       about: "How AI agents gather evidence for SOC investigations in SAP environments – read-only access, auditability and guardrails – and where human oversight and containment decisions must stay with security professionals.",
       link: "https://us02web.zoom.us/webinar/register/WN_yDAKd02VQCCIP23xzefg6w#/registration" },
     { date: "2026-11-04", title: "AI-Enabled IT Operations – Driving Efficiency in Solution Development and Application Management", organizer: "EY Switzerland", place: "Zürich", type: "Executive roundtable", status: "attended",
